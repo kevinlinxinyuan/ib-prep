@@ -63,13 +63,14 @@ function getDaySchedule(date, phase) {
   const dow = date.getDay();
   const p = phase || 1;
 
-  const industryReadP1 = "產業閱讀（broker report / Semianalysis / Contrary）→ 寫3句 takeaway";
-  const industryReadP2 = "產業閱讀 + Deal case study 交替";
-  const industryReadP3 = "面試技術題刷題 + Investment pitch 打磨";
-  const industryTask = p === 1 ? industryReadP1 : p === 2 ? industryReadP2 : industryReadP3;
-
   const gpaNote = p === 3 ? "GPA 維持（考前加碼）" : "GPA 唸書";
-  const eveningFlex = p === 3 ? "Mock interview 練習 / Video interview 錄影練習" : "英文口說20min（錄音→聽→重錄）";
+  const oralPractice = p === 3 ? "Mock interview 練習 / Video interview 錄影練習" : "英文口說 20min（錄音→聽→重錄）";
+
+  // 週一：Semianalysis / Contrary Research
+  // 週二：Quartr earnings + Tier 2 sector
+  // 週三上午：快速新聞 scan
+  // 週四下午：整理筆記 + Substack 初稿
+  // 週五：長篇 broker report + 建模（Phase 2+）
 
   const blocks = {
     0: [ // 週日
@@ -79,77 +80,77 @@ function getDaySchedule(date, phase) {
       { time: "11:00–12:30", task: gpaNote, cat: "gpa" },
       { time: "12:30–13:30", task: "午餐 + 休息", cat: "life" },
       { time: "13:30–17:30", task: `${gpaNote}（主力 Block 4hr）`, cat: "gpa" },
-      { time: "17:30–19:00", task: p <= 2 ? "產業閱讀 / Modeling 練習（Phase 2+）" : "面試準備：Behavioral Q + Market view 整理", cat: "industry" },
+      { time: "17:30–19:00", task: p <= 2 ? "Substack 收尾 + 發佈（stock pitch / industry insight）" : "面試準備：Market view 整理 + Pitch 打磨", cat: "industry" },
       { time: "19:00–20:00", task: "晚餐", cat: "life" },
-      { time: "20:00–21:30", task: eveningFlex, cat: "english" },
-      { time: "21:30–22:30", task: p <= 2 ? "產業閱讀 / 公司研究" : "Mock interview 練習", cat: "industry" },
-      { time: "22:30–23:00", task: "下週計畫排定", cat: "review" },
-      { time: "23:00–00:30", task: "彈性：閱讀 / 放鬆 / 補進度", cat: "flex" },
+      { time: "20:00–21:00", task: p === 1 ? "Behavioral Story Bank 撰寫（每週完成1-2個故事）" : p === 2 ? "Behavioral 打磨 + 用英文演練" : "Full mock interview 練習", cat: "english" },
+      { time: "21:00–22:00", task: "英文口說輸出練習：挑本週讀過的2-3個公司/主題，用英文講一遍觀點", cat: "english" },
+      { time: "22:00–22:30", task: "下週計畫排定 + 選定下週每日閱讀材料", cat: "review" },
+      { time: "22:30–00:30", task: "彈性：M&A 書籍閱讀 / 放鬆 / 補進度", cat: "flex" },
       { time: "01:00", task: "就寢", cat: "life" },
     ],
-    1: [ // 週一 — 整天實習
-      { time: "08:00–09:00", task: "起床 + 通勤到公司 1hr（聽英文 podcast / Bloomberg）", cat: "english" },
-      { time: "09:00–12:00", task: `實習｜空檔 → ${industryTask}`, cat: "intern" },
+    1: [ // 週一 — 整天實習｜今日主題：Semianalysis / Contrary Research
+      { time: "08:00–09:00", task: "起床 + 通勤到公司 1hr（看 M&A 電子書：併購估值/併購增值）", cat: "industry" },
+      { time: "09:00–12:00", task: "實習｜空檔 → Semianalysis / Contrary Research 精讀 → 寫3句 takeaway", cat: "intern" },
       { time: "12:00–13:00", task: "午餐", cat: "life" },
-      { time: "13:00–18:00", task: "實習｜空檔 → 產業筆記整理 / LSEG 研究", cat: "intern" },
-      { time: "18:00–19:00", task: "通勤到學校 1hr（聽英文 podcast）", cat: "english" },
+      { time: "13:00–18:00", task: "實習｜空檔 → 續讀 Semianalysis / Contrary + LSEG 數據查詢", cat: "intern" },
+      { time: "18:00–19:00", task: "通勤到學校（放鬆）", cat: "life" },
       { time: "19:00–21:00", task: `涼課時間 → ${gpaNote} 2hr`, cat: "gpa" },
       { time: "21:00–22:00", task: "運動 1hr", cat: "fitness" },
       { time: "22:00–22:30", task: "盥洗 + 休息", cat: "life" },
-      { time: "22:30–00:00", task: eveningFlex + " + 產業閱讀", cat: "english" },
+      { time: "22:30–00:00", task: oralPractice + " + Behavioral story 複習", cat: "english" },
       { time: "00:00–00:30", task: "放鬆 / 收信整理", cat: "life" },
       { time: "01:00", task: "就寢", cat: "life" },
     ],
-    2: [ // 週二 — 整天實習
-      { time: "08:00–09:00", task: "起床 + 通勤到公司 1hr（聽英文 podcast / Bloomberg）", cat: "english" },
-      { time: "09:00–12:00", task: "實習｜空檔 → 產業閱讀（Tier 2: Healthcare / Consumer）", cat: "intern" },
+    2: [ // 週二 — 整天實習｜今日主題：Quartr Earnings + Tier 2 Sector
+      { time: "08:00–09:00", task: "起床 + 通勤到公司 1hr（看 M&A 電子書）", cat: "industry" },
+      { time: "09:00–12:00", task: "實習｜空檔 → Quartr：聽/讀 earnings call（挑1-2間公司）", cat: "intern" },
       { time: "12:00–13:00", task: "午餐", cat: "life" },
-      { time: "13:00–18:00", task: `實習｜空檔 → ${p >= 2 ? "Deal case study / Modeling" : "產業閱讀續"}`, cat: "intern" },
-      { time: "18:00–19:00", task: "通勤到學校 1hr（聽英文 podcast）", cat: "english" },
+      { time: "13:00–18:00", task: `實習｜空檔 → Tier 2 產業閱讀（Healthcare / Consumer）${p >= 2 ? " + 公司模型搭建" : ""}`, cat: "intern" },
+      { time: "18:00–19:00", task: "通勤到學校（放鬆）", cat: "life" },
       { time: "19:00–21:00", task: `涼課時間 → ${gpaNote}`, cat: "gpa" },
       { time: "21:00–22:00", task: "運動 1hr", cat: "fitness" },
       { time: "22:00–22:30", task: "盥洗 + 休息", cat: "life" },
-      { time: "22:30–00:00", task: p <= 2 ? "產業閱讀 / 公司研究" : "面試技術題刷題", cat: "industry" },
+      { time: "22:30–00:00", task: p <= 2 ? "產業筆記整理 + 公司研究歸檔" : "面試技術題刷題", cat: "industry" },
       { time: "00:00–00:30", task: "放鬆 / 收信整理", cat: "life" },
       { time: "01:00", task: "就寢", cat: "life" },
     ],
-    3: [ // 週三 — 上午實習，下午上課
-      { time: "08:00–09:00", task: "起床 + 通勤到公司 1hr", cat: "life" },
-      { time: "09:00–12:00", task: "實習｜空檔 → 快速產業新聞 scan（LSEG / Quartr）", cat: "intern" },
-      { time: "12:00–13:00", task: "午餐 + 通勤到學校 1hr", cat: "life" },
+    3: [ // 週三 — 上午實習，下午上課｜上午：快速新聞 scan
+      { time: "08:00–09:00", task: "起床 + 通勤到公司 1hr（看 M&A 電子書）", cat: "industry" },
+      { time: "09:00–12:00", task: "實習｜空檔 → 快速產業新聞 scan（LSEG / Quartr headlines）", cat: "intern" },
+      { time: "12:00–13:00", task: "午餐 + 通勤到學校", cat: "life" },
       { time: "13:00–17:30", task: `上課 + 課間空檔 → ${gpaNote}（平日最大學業 block）`, cat: "gpa" },
-      { time: "17:40–18:40", task: "🎓 英文家教 Tutor（固定）", cat: "tutor" },
+      { time: "17:40–18:40", task: "🎓 英文家教 Tutor — 當週 mock practice（固定）", cat: "tutor" },
       { time: "18:40–19:30", task: "晚餐 + 休息", cat: "life" },
       { time: "19:30–21:00", task: gpaNote, cat: "gpa" },
       { time: "21:00–22:00", task: "運動 1hr", cat: "fitness" },
       { time: "22:00–22:30", task: "盥洗 + 休息", cat: "life" },
-      { time: "22:30–00:00", task: "英文口說練習 20min + 產業閱讀", cat: "english" },
+      { time: "22:30–00:00", task: oralPractice + " + 產業閱讀補進度", cat: "english" },
       { time: "00:00–00:30", task: "放鬆", cat: "life" },
       { time: "01:00", task: "就寢", cat: "life" },
     ],
-    4: [ // 週四 — 上午上課，下午實習
-      { time: "08:00–09:00", task: "起床 + 通勤到學校 1hr（聽英文 podcast）", cat: "english" },
+    4: [ // 週四 — 上午上課，下午實習｜下午：整理筆記 + Substack 起草
+      { time: "08:00–09:00", task: "起床 + 通勤到學校 1hr（看 M&A 電子書）", cat: "industry" },
       { time: "09:00–12:00", task: `上課 + 課間 → ${gpaNote}`, cat: "gpa" },
-      { time: "12:00–13:00", task: "午餐 + 通勤到公司 1hr", cat: "life" },
-      { time: "13:00–18:00", task: "實習｜空檔 → 整理本週產業筆記 / 寫 Weekly Industry Note", cat: "intern" },
-      { time: "18:00–19:00", task: "通勤回學校 1hr", cat: "life" },
+      { time: "12:00–13:00", task: "午餐 + 通勤到公司", cat: "life" },
+      { time: "13:00–18:00", task: "實習｜空檔 → 整理本週產業筆記 + Substack 初稿起草", cat: "intern" },
+      { time: "18:00–19:00", task: "通勤回學校（放鬆）", cat: "life" },
       { time: "19:00–21:00", task: `涼課時間 → ${gpaNote}`, cat: "gpa" },
       { time: "21:00–22:00", task: "運動 1hr", cat: "fitness" },
       { time: "22:00–22:30", task: "盥洗 + 休息", cat: "life" },
-      { time: "22:30–00:00", task: eveningFlex + " + 產業閱讀", cat: "english" },
+      { time: "22:30–00:00", task: oralPractice + " + Substack 續寫 or 產業閱讀", cat: "english" },
       { time: "00:00–00:30", task: "放鬆", cat: "life" },
       { time: "01:00", task: "就寢", cat: "life" },
     ],
-    5: [ // 週五 — 整天實習
-      { time: "08:00–09:00", task: "起床 + 通勤到公司 1hr（聽英文 podcast / Bloomberg）", cat: "english" },
-      { time: "09:00–12:00", task: `實習｜空檔 → ${p === 1 ? "產業深讀日（挑一篇長報告精讀）" : p === 2 ? "Deal case study 深讀 / Modeling" : "面試模擬準備"}`, cat: "intern" },
+    5: [ // 週五 — 整天實習｜今日主題：長篇 Broker Report + 建模（P2+）
+      { time: "08:00–09:00", task: "起床 + 通勤到公司 1hr（看 M&A 電子書）", cat: "industry" },
+      { time: "09:00–12:00", task: `實習｜空檔 → ${p === 1 ? "長篇 broker report 精讀（挑一篇 initiation / sector report）" : p === 2 ? "Broker report 精讀 + 公司財務模型搭建" : "面試模擬準備 + Pitch 最終打磨"}`, cat: "intern" },
       { time: "12:00–13:00", task: "午餐", cat: "life" },
-      { time: "13:00–18:00", task: "實習｜空檔 → 續深讀 / 公司研究", cat: "intern" },
-      { time: "18:00–19:00", task: "通勤到學校 1hr", cat: "life" },
+      { time: "13:00–18:00", task: `實習｜空檔 → ${p >= 2 ? "續建模型 + 公司估值練習" : "續讀 report + 公司研究筆記"}`, cat: "intern" },
+      { time: "18:00–19:00", task: "通勤到學校（放鬆）", cat: "life" },
       { time: "19:00–21:00", task: `涼課 → ${gpaNote} / 彈性（社交休息亦可）`, cat: "gpa" },
       { time: "21:00–22:00", task: "運動 1hr", cat: "fitness" },
       { time: "22:00–22:30", task: "盥洗 + 休息", cat: "life" },
-      { time: "22:30–00:00", task: eveningFlex + " + 本週覆盤", cat: "english" },
+      { time: "22:30–00:00", task: "本週覆盤 + 英文口說：用英文講本週讀過的公司觀點", cat: "english" },
       { time: "00:00–00:30", task: "放鬆", cat: "life" },
       { time: "01:00", task: "就寢", cat: "life" },
     ],
@@ -158,12 +159,12 @@ function getDaySchedule(date, phase) {
       { time: "09:30–12:30", task: `${gpaNote}（主力衝刺 3hr）`, cat: "gpa" },
       { time: "12:30–13:30", task: "午餐", cat: "life" },
       { time: "13:30–14:30", task: "運動 1hr", cat: "fitness" },
-      { time: "14:30–17:00", task: p <= 2 ? "產業深度閱讀 / Investment thesis 整理" : "Mock interview + Pitch 打磨", cat: "industry" },
-      { time: "17:00–17:30", task: "英文口說練習（錄音）", cat: "english" },
+      { time: "14:30–17:00", task: p === 1 ? "產業深度閱讀 + Investment thesis 整理" : p === 2 ? "公司模型搭建 + Deal structure 研究" : "Mock interview + Pitch 打磨", cat: "industry" },
+      { time: "17:00–17:30", task: "英文口說練習（錄音：用英文 pitch 一間本週研究的公司）", cat: "english" },
       { time: "17:30–19:00", task: "彈性：社交 / 休息 / 補進度", cat: "flex" },
       { time: "19:00–20:00", task: "晚餐", cat: "life" },
-      { time: "20:00–22:00", task: p >= 2 ? "Modeling 練習 / Deal structure 研究" : "產業閱讀 / 公司研究", cat: "industry" },
-      { time: "22:00–00:00", task: `${gpaNote} / 彈性學習`, cat: "gpa" },
+      { time: "20:00–22:00", task: p === 1 ? "產業閱讀 / 公司研究" : p === 2 ? "Modeling 練習 + Deal structure 研究" : "面試全套模擬", cat: "industry" },
+      { time: "22:00–00:00", task: `${gpaNote} / 彈性學習 / M&A 書籍`, cat: "gpa" },
       { time: "00:00–00:30", task: "放鬆", cat: "life" },
       { time: "01:00", task: "就寢", cat: "life" },
     ],
@@ -492,6 +493,87 @@ function App() {
                 <div style={{ fontSize: 12, fontWeight: 600, color: p.color }}>{p.name}</div>
                 <div style={{ fontSize: 10, color: "#555" }}>{p.range}</div>
               </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Reading Priority Guide */}
+        <div style={{
+          marginTop: 12, padding: "16px", background: "#111520",
+          border: "1px solid #1a2030", borderRadius: 12
+        }}>
+          <div style={{ fontSize: 11, fontWeight: 600, color: "#666", marginBottom: 12, letterSpacing: "1px", fontFamily: "'DM Mono', monospace" }}>
+            📖 工作空檔閱讀指南 — 不用想，照做
+          </div>
+          {[
+            { day: "週一", focus: "Semianalysis / Contrary Research", note: "深度科技產業分析", color: "#4A90D9" },
+            { day: "週二", focus: "Quartr Earnings Calls + Tier 2 Sector", note: "聽 1-2 間公司 call / Healthcare or Consumer", color: "#5B9BD5" },
+            { day: "週三", focus: "LSEG + Quartr 快速 Scan", note: "產業新聞、數據更新、headlines", color: "#6BA5DE" },
+            { day: "週四", focus: "整理本週筆記 + Substack 起草", note: "把讀過的消化成自己的觀點", color: "#D4A03C" },
+            { day: "週五", focus: "長篇 Broker Report 精讀", note: "P1: Initiation report / P2+: 邊讀邊建模", color: "#E8B84D" },
+          ].map((item, i) => (
+            <div key={i} style={{
+              display: "flex", alignItems: "flex-start", gap: 10, padding: "8px 0",
+              borderBottom: i < 4 ? "1px solid #1a1a22" : "none"
+            }}>
+              <div style={{
+                minWidth: 36, fontSize: 10, fontWeight: 700, color: item.color,
+                fontFamily: "'DM Mono', monospace", paddingTop: 2
+              }}>{item.day}</div>
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 600, color: "#ccc" }}>{item.focus}</div>
+                <div style={{ fontSize: 10, color: "#555", marginTop: 2 }}>{item.note}</div>
+              </div>
+            </div>
+          ))}
+          <div style={{
+            marginTop: 12, padding: "8px 10px", background: "#1a1a2e",
+            borderRadius: 8, fontSize: 10, color: "#666", lineHeight: 1.6
+          }}>
+            <span style={{ color: "#888", fontWeight: 600 }}>去程通勤：</span>M&A 經典電子書（併購估值 / 併購增值）<br/>
+            <span style={{ color: "#888", fontWeight: 600 }}>回程通勤：</span>放鬆（漫畫 / 休息）— 不排任務
+          </div>
+        </div>
+
+        {/* Weekly Output Checklist */}
+        <div style={{
+          marginTop: 12, padding: "16px", background: "#111520",
+          border: "1px solid #1a2030", borderRadius: 12
+        }}>
+          <div style={{ fontSize: 11, fontWeight: 600, color: "#666", marginBottom: 12, letterSpacing: "1px", fontFamily: "'DM Mono', monospace" }}>
+            ✍️ 每週輸出 CHECKLIST（Phase {phase}）
+          </div>
+          {[
+            { task: "產業筆記 5-7 則（每則 3 句 takeaway + 1 個觀點）", phase: "all" },
+            { task: "Substack 文章 1 篇（stock pitch 或 industry insight）", phase: "all" },
+            { task: "Behavioral Story 撰寫/打磨 1-2 個", phase: "all" },
+            { task: "英文口說輸出：用英文講 2-3 個公司觀點（錄音）", phase: "all" },
+            { task: "Weekly Industry Note 整理", phase: "all" },
+            ...(phase >= 2 ? [
+              { task: "公司財務模型搭建 1 間（邊研究邊建模）", phase: "p2" },
+              { task: "Deal case study 1 個（交易架構 + 邏輯）", phase: "p2" },
+            ] : []),
+            ...(phase >= 3 ? [
+              { task: "Full mock interview 1 次", phase: "p3" },
+              { task: "Video interview 錄影練習 2 次", phase: "p3" },
+            ] : []),
+          ].map((item, i) => (
+            <div key={i} style={{
+              display: "flex", alignItems: "center", gap: 8, padding: "6px 0",
+              fontSize: 12, color: "#aaa"
+            }}>
+              <span style={{ color: "#333" }}>○</span>
+              <span>{item.task}</span>
+              {item.phase !== "all" && (
+                <span style={{
+                  fontSize: 8, padding: "1px 6px", borderRadius: 8,
+                  background: item.phase === "p2" ? "#D4A03C22" : "#C0392B22",
+                  color: item.phase === "p2" ? "#D4A03C" : "#C0392B",
+                  fontWeight: 600, marginLeft: "auto"
+                }}>
+                  {item.phase === "p2" ? "P2+" : "P3"}
+                </span>
+              )}
             </div>
           ))}
         </div>
