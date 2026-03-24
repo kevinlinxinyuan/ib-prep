@@ -59,18 +59,138 @@ function dateKey(date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
 
+// Exam periods: prep + exam weeks
+function isExamPeriod(date) {
+  const m = date.getMonth(), d = date.getDate();
+  // Midterm: 4/5–4/17 (prep 4/5-4/11, exam 4/12-4/17)
+  if (m === 3 && d >= 5 && d <= 17) return d >= 12 ? "exam" : "prep";
+  // Final: 5/31–6/12 (prep 5/31-6/6, exam 6/7-6/12)
+  if (m === 4 && d >= 31) return "prep";
+  if (m === 5 && d <= 12) return d >= 7 ? "exam" : "prep";
+  return false;
+}
+
+// Biweekly Substack: week number check (odd weeks = draft/write, even weeks = off)
+function isSubstackWeek(date) {
+  const start = new Date(2026, 3, 1); // April 1, 2026
+  const diff = Math.floor((date - start) / (7 * 24 * 60 * 60 * 1000));
+  return diff % 2 === 0;
+}
+
 function getDaySchedule(date, phase) {
   const dow = date.getDay();
   const p = phase || 1;
+  const exam = isExamPeriod(date);
+  const substackWk = isSubstackWeek(date);
 
-  const gpaNote = p === 3 ? "GPA 維持（考前加碼）" : "GPA 唸書";
+  const gpaNote = exam ? "⚠️ GPA 全力衝刺（考試模式）" : (p === 3 ? "GPA 維持（考前加碼）" : "GPA 唸書");
   const oralPractice = p === 3 ? "Mock interview 練習 / Video interview 錄影練習" : "英文口說 20min（錄音→聽→重錄）";
 
+  // ===== EXAM MODE: 產業/Substack/建模全停，只保留 GPA + 運動 + 基本英文 =====
+  if (exam) {
+    const examBlocks = {
+      0: [ // 週日
+        { time: "09:00–09:30", task: "起床 + 準備", cat: "life" },
+        { time: "09:30–10:30", task: "運動 1hr（維持精神狀態）", cat: "fitness" },
+        { time: "10:30–12:30", task: gpaNote, cat: "gpa" },
+        { time: "12:30–13:30", task: "午餐 + 休息", cat: "life" },
+        { time: "13:30–18:00", task: `${gpaNote}（主力 Block 4.5hr）`, cat: "gpa" },
+        { time: "18:00–19:00", task: "晚餐 + 休息", cat: "life" },
+        { time: "19:00–22:00", task: `${gpaNote}（晚間 Block 3hr）`, cat: "gpa" },
+        { time: "22:00–22:30", task: oralPractice, cat: "english" },
+        { time: "22:30–00:30", task: `${gpaNote} / 考前複習`, cat: "gpa" },
+        { time: "01:00", task: "就寢", cat: "life" },
+      ],
+      1: [ // 週一 — 整天實習
+        { time: "08:00–09:00", task: "起床 + 通勤到公司 1hr（看考試筆記）", cat: "gpa" },
+        { time: "09:00–12:00", task: "實習｜空檔 → 考試複習", cat: "intern" },
+        { time: "12:00–13:00", task: "午餐", cat: "life" },
+        { time: "13:00–18:00", task: "實習｜空檔 → 考試複習", cat: "intern" },
+        { time: "18:00–19:00", task: "通勤到學校（放鬆）", cat: "life" },
+        { time: "19:00–21:00", task: `涼課時間 → ${gpaNote}`, cat: "gpa" },
+        { time: "21:00–22:00", task: "運動 1hr", cat: "fitness" },
+        { time: "22:00–22:30", task: "盥洗 + 休息", cat: "life" },
+        { time: "22:30–00:30", task: `${gpaNote}`, cat: "gpa" },
+        { time: "01:00", task: "就寢", cat: "life" },
+      ],
+      2: [ // 週二 — 整天實習
+        { time: "08:00–09:00", task: "起床 + 通勤到公司 1hr（看考試筆記）", cat: "gpa" },
+        { time: "09:00–12:00", task: "實習｜空檔 → 考試複習", cat: "intern" },
+        { time: "12:00–13:00", task: "午餐", cat: "life" },
+        { time: "13:00–18:00", task: "實習｜空檔 → 考試複習", cat: "intern" },
+        { time: "18:00–19:00", task: "通勤到學校（放鬆）", cat: "life" },
+        { time: "19:00–21:00", task: `涼課時間 → ${gpaNote}`, cat: "gpa" },
+        { time: "21:00–22:00", task: "運動 1hr", cat: "fitness" },
+        { time: "22:00–22:30", task: "盥洗 + 休息", cat: "life" },
+        { time: "22:30–00:30", task: `${gpaNote}`, cat: "gpa" },
+        { time: "01:00", task: "就寢", cat: "life" },
+      ],
+      3: [ // 週三
+        { time: "08:00–09:00", task: "起床 + 通勤到公司 1hr", cat: "life" },
+        { time: "09:00–12:00", task: "實習｜空檔 → 考試複習", cat: "intern" },
+        { time: "12:00–13:00", task: "午餐 + 通勤到學校", cat: "life" },
+        { time: "13:00–17:30", task: `上課 + 課間 → ${gpaNote}`, cat: "gpa" },
+        { time: "17:40–18:40", task: "🎓 英文家教 Tutor（固定，考試週照常）", cat: "tutor" },
+        { time: "18:40–19:30", task: "晚餐 + 休息", cat: "life" },
+        { time: "19:30–21:00", task: gpaNote, cat: "gpa" },
+        { time: "21:00–22:00", task: "運動 1hr", cat: "fitness" },
+        { time: "22:00–22:30", task: "盥洗 + 休息", cat: "life" },
+        { time: "22:30–00:30", task: `${gpaNote}`, cat: "gpa" },
+        { time: "01:00", task: "就寢", cat: "life" },
+      ],
+      4: [ // 週四
+        { time: "08:00–09:00", task: "起床 + 通勤到學校 1hr（看考試筆記）", cat: "gpa" },
+        { time: "09:00–12:00", task: `上課 + 課間 → ${gpaNote}`, cat: "gpa" },
+        { time: "12:00–13:00", task: "午餐 + 通勤到公司", cat: "life" },
+        { time: "13:00–18:00", task: "實習｜空檔 → 考試複習", cat: "intern" },
+        { time: "18:00–19:00", task: "通勤回學校（放鬆）", cat: "life" },
+        { time: "19:00–21:00", task: `涼課時間 → ${gpaNote}`, cat: "gpa" },
+        { time: "21:00–22:00", task: "運動 1hr", cat: "fitness" },
+        { time: "22:00–22:30", task: "盥洗 + 休息", cat: "life" },
+        { time: "22:30–00:30", task: `${gpaNote}`, cat: "gpa" },
+        { time: "01:00", task: "就寢", cat: "life" },
+      ],
+      5: [ // 週五
+        { time: "08:00–09:00", task: "起床 + 通勤到公司 1hr（看考試筆記）", cat: "gpa" },
+        { time: "09:00–12:00", task: "實習｜空檔 → 考試複習", cat: "intern" },
+        { time: "12:00–13:00", task: "午餐", cat: "life" },
+        { time: "13:00–18:00", task: "實習｜空檔 → 考試複習", cat: "intern" },
+        { time: "18:00–19:00", task: "通勤到學校（放鬆）", cat: "life" },
+        { time: "19:00–21:00", task: `涼課 → ${gpaNote}`, cat: "gpa" },
+        { time: "21:00–22:00", task: "運動 1hr", cat: "fitness" },
+        { time: "22:00–22:30", task: "盥洗 + 休息", cat: "life" },
+        { time: "22:30–00:30", task: `${gpaNote}`, cat: "gpa" },
+        { time: "01:00", task: "就寢", cat: "life" },
+      ],
+      6: [ // 週六
+        { time: "09:00–09:30", task: "起床 + 準備", cat: "life" },
+        { time: "09:30–10:30", task: "運動 1hr", cat: "fitness" },
+        { time: "10:30–12:30", task: `${gpaNote}（2hr）`, cat: "gpa" },
+        { time: "12:30–13:30", task: "午餐", cat: "life" },
+        { time: "13:30–18:00", task: `${gpaNote}（主力 Block 4.5hr）`, cat: "gpa" },
+        { time: "18:00–19:00", task: "晚餐 + 休息", cat: "life" },
+        { time: "19:00–22:00", task: `${gpaNote}（晚間 Block 3hr）`, cat: "gpa" },
+        { time: "22:00–22:30", task: oralPractice, cat: "english" },
+        { time: "22:30–00:30", task: `${gpaNote} / 考前複習`, cat: "gpa" },
+        { time: "01:00", task: "就寢", cat: "life" },
+      ],
+    };
+    return examBlocks[dow] || examBlocks[0];
+  }
+
+  // ===== NORMAL MODE =====
   // 週一：Semianalysis / Contrary Research
   // 週二：Quartr earnings + Tier 2 sector
-  // 週三上午：快速新聞 scan
-  // 週四下午：整理筆記 + Substack 初稿
+  // 週三上午：實習（3hr，不額外排任務）
+  // 週四下午：整理筆記 + Substack（雙週）
   // 週五：長篇 broker report + 建模（Phase 2+）
+
+  const thuTask = substackWk
+    ? "實習｜空檔 → 整理本週產業筆記 + Substack 起草（雙週一篇）"
+    : "實習｜空檔 → 整理本週產業筆記 + 公司研究深化";
+  const sunSubstack = substackWk
+    ? "Substack 收尾 + 發佈（stock pitch / industry insight）"
+    : (p <= 2 ? "產業深度閱讀 / Investment thesis 整理" : "面試準備：Market view 整理 + Pitch 打磨");
 
   const blocks = {
     0: [ // 週日
@@ -80,15 +200,15 @@ function getDaySchedule(date, phase) {
       { time: "11:00–12:30", task: gpaNote, cat: "gpa" },
       { time: "12:30–13:30", task: "午餐 + 休息", cat: "life" },
       { time: "13:30–17:30", task: `${gpaNote}（主力 Block 4hr）`, cat: "gpa" },
-      { time: "17:30–19:00", task: p <= 2 ? "Substack 收尾 + 發佈（stock pitch / industry insight）" : "面試準備：Market view 整理 + Pitch 打磨", cat: "industry" },
+      { time: "17:30–19:00", task: sunSubstack, cat: "industry" },
       { time: "19:00–20:00", task: "晚餐", cat: "life" },
       { time: "20:00–21:00", task: p === 1 ? "Behavioral Story Bank 撰寫（每週完成1-2個故事）" : p === 2 ? "Behavioral 打磨 + 用英文演練" : "Full mock interview 練習", cat: "english" },
-      { time: "21:00–22:00", task: "英文口說輸出練習：挑本週讀過的2-3個公司/主題，用英文講一遍觀點", cat: "english" },
+      { time: "21:00–22:00", task: "英文口說輸出：挑本週讀過的2-3間公司，用英文講觀點 + 模擬被追問", cat: "english" },
       { time: "22:00–22:30", task: "下週計畫排定 + 選定下週每日閱讀材料", cat: "review" },
       { time: "22:30–00:30", task: "彈性：M&A 書籍閱讀 / 放鬆 / 補進度", cat: "flex" },
       { time: "01:00", task: "就寢", cat: "life" },
     ],
-    1: [ // 週一 — 整天實習｜今日主題：Semianalysis / Contrary Research
+    1: [ // 週一 — 整天實習｜Semianalysis / Contrary Research
       { time: "08:00–09:00", task: "起床 + 通勤到公司 1hr（看 M&A 電子書：併購估值/併購增值）", cat: "industry" },
       { time: "09:00–12:00", task: "實習｜空檔 → Semianalysis / Contrary Research 精讀 → 寫3句 takeaway", cat: "intern" },
       { time: "12:00–13:00", task: "午餐", cat: "life" },
@@ -101,7 +221,7 @@ function getDaySchedule(date, phase) {
       { time: "00:00–00:30", task: "放鬆 / 收信整理", cat: "life" },
       { time: "01:00", task: "就寢", cat: "life" },
     ],
-    2: [ // 週二 — 整天實習｜今日主題：Quartr Earnings + Tier 2 Sector
+    2: [ // 週二 — 整天實習｜Quartr Earnings + Tier 2 Sector
       { time: "08:00–09:00", task: "起床 + 通勤到公司 1hr（看 M&A 電子書）", cat: "industry" },
       { time: "09:00–12:00", task: "實習｜空檔 → Quartr：聽/讀 earnings call（挑1-2間公司）", cat: "intern" },
       { time: "12:00–13:00", task: "午餐", cat: "life" },
@@ -114,9 +234,9 @@ function getDaySchedule(date, phase) {
       { time: "00:00–00:30", task: "放鬆 / 收信整理", cat: "life" },
       { time: "01:00", task: "就寢", cat: "life" },
     ],
-    3: [ // 週三 — 上午實習，下午上課｜上午：快速新聞 scan
+    3: [ // 週三 — 上午實習 3hr，下午上課
       { time: "08:00–09:00", task: "起床 + 通勤到公司 1hr（看 M&A 電子書）", cat: "industry" },
-      { time: "09:00–12:00", task: "實習｜空檔 → 快速產業新聞 scan（LSEG / Quartr headlines）", cat: "intern" },
+      { time: "09:00–12:00", task: "實習", cat: "intern" },
       { time: "12:00–13:00", task: "午餐 + 通勤到學校", cat: "life" },
       { time: "13:00–17:30", task: `上課 + 課間空檔 → ${gpaNote}（平日最大學業 block）`, cat: "gpa" },
       { time: "17:40–18:40", task: "🎓 英文家教 Tutor — 當週 mock practice（固定）", cat: "tutor" },
@@ -128,20 +248,20 @@ function getDaySchedule(date, phase) {
       { time: "00:00–00:30", task: "放鬆", cat: "life" },
       { time: "01:00", task: "就寢", cat: "life" },
     ],
-    4: [ // 週四 — 上午上課，下午實習｜下午：整理筆記 + Substack 起草
+    4: [ // 週四 — 上午上課，下午實習｜筆記整理 + Substack（雙週）
       { time: "08:00–09:00", task: "起床 + 通勤到學校 1hr（看 M&A 電子書）", cat: "industry" },
       { time: "09:00–12:00", task: `上課 + 課間 → ${gpaNote}`, cat: "gpa" },
       { time: "12:00–13:00", task: "午餐 + 通勤到公司", cat: "life" },
-      { time: "13:00–18:00", task: "實習｜空檔 → 整理本週產業筆記 + Substack 初稿起草", cat: "intern" },
+      { time: "13:00–18:00", task: thuTask, cat: "intern" },
       { time: "18:00–19:00", task: "通勤回學校（放鬆）", cat: "life" },
       { time: "19:00–21:00", task: `涼課時間 → ${gpaNote}`, cat: "gpa" },
       { time: "21:00–22:00", task: "運動 1hr", cat: "fitness" },
       { time: "22:00–22:30", task: "盥洗 + 休息", cat: "life" },
-      { time: "22:30–00:00", task: oralPractice + " + Substack 續寫 or 產業閱讀", cat: "english" },
+      { time: "22:30–00:00", task: oralPractice + (substackWk ? " + Substack 續寫" : " + 產業閱讀"), cat: "english" },
       { time: "00:00–00:30", task: "放鬆", cat: "life" },
       { time: "01:00", task: "就寢", cat: "life" },
     ],
-    5: [ // 週五 — 整天實習｜今日主題：長篇 Broker Report + 建模（P2+）
+    5: [ // 週五 — 整天實習｜長篇 Broker Report + 建模（P2+）
       { time: "08:00–09:00", task: "起床 + 通勤到公司 1hr（看 M&A 電子書）", cat: "industry" },
       { time: "09:00–12:00", task: `實習｜空檔 → ${p === 1 ? "長篇 broker report 精讀（挑一篇 initiation / sector report）" : p === 2 ? "Broker report 精讀 + 公司財務模型搭建" : "面試模擬準備 + Pitch 最終打磨"}`, cat: "intern" },
       { time: "12:00–13:00", task: "午餐", cat: "life" },
@@ -240,7 +360,7 @@ function App() {
       const actionable = sched.filter(b => b.cat !== "life");
       if (actionable.length === 0) continue;
       const done = actionable.filter(b => checked[`${dk}-${b.time}`]).length;
-      if (done >= actionable.length * 0.7) streak++;
+      if (done >= actionable.length * 0.65) streak++;
       else if (i > 0) break;
     }
     setStreakDays(streak);
@@ -278,6 +398,7 @@ function App() {
   const weekPct = weekStats.reduce((a, s) => a + s.done, 0) / Math.max(1, weekStats.reduce((a, s) => a + s.total, 0)) * 100;
 
   const phaseObj = PHASES.find(p => p.id === phase) || PHASES[0];
+  const exam = isExamPeriod(selectedDay);
   const isToday = (d) => dateKey(d) === dateKey(new Date());
 
   return (
@@ -285,10 +406,26 @@ function App() {
       {/* Header */}
       <div style={{
         background: "linear-gradient(135deg, #0d1117 0%, #111827 50%, #0d1117 100%)",
-        borderBottom: "1px solid #1a1f2e", padding: "24px 20px 20px",
+        borderBottom: exam ? "2px solid #C0392B" : "1px solid #1a1f2e", padding: "24px 20px 20px",
         position: "sticky", top: 0, zIndex: 100
       }}>
         <div style={{ maxWidth: 720, margin: "0 auto" }}>
+          {exam && (
+            <div style={{
+              background: "#C0392B22", border: "1px solid #C0392B44", borderRadius: 8,
+              padding: "8px 12px", marginBottom: 12, display: "flex", alignItems: "center", gap: 8
+            }}>
+              <span style={{ fontSize: 16 }}>⚠️</span>
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#E74C3C" }}>
+                  {exam === "exam" ? "考試週 EXAM WEEK" : "考前衝刺 EXAM PREP"}
+                </div>
+                <div style={{ fontSize: 10, color: "#C0392B99" }}>
+                  產業閱讀、Substack、建模全部暫停 — 全力 GPA
+                </div>
+              </div>
+            </div>
+          )}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
             <div>
               <h1 style={{
