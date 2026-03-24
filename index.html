@@ -315,6 +315,41 @@ function saveCheckedData(data) {
   try { localStorage.setItem("ib-prep-checked", JSON.stringify(data)); } catch {}
 }
 
+// Schedule caching: past days keep their original schedule even after code changes
+function loadScheduleCache() {
+  try {
+    const raw = localStorage.getItem("ib-prep-schedules");
+    return raw ? JSON.parse(raw) : {};
+  } catch { return {}; }
+}
+function saveScheduleCache(cache) {
+  try { localStorage.setItem("ib-prep-schedules", JSON.stringify(cache)); } catch {}
+}
+
+const _scheduleCache = loadScheduleCache();
+
+function getSchedule(date) {
+  const dk = dateKey(date);
+  const today = dateKey(new Date());
+  const phase = getPhase(date);
+
+  // For past days: use cached schedule if it exists
+  if (dk < today && _scheduleCache[dk]) {
+    return _scheduleCache[dk];
+  }
+
+  // Generate fresh schedule
+  const schedule = getDaySchedule(date, phase);
+
+  // Cache today and past days (not future — future might still change)
+  if (dk <= today) {
+    _scheduleCache[dk] = schedule;
+    saveScheduleCache(_scheduleCache);
+  }
+
+  return schedule;
+}
+
 function ProgressRing({ pct, size = 44, stroke = 3 }) {
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
@@ -355,8 +390,7 @@ function App() {
       const d = new Date(today);
       d.setDate(today.getDate() - i);
       const dk = dateKey(d);
-      const phase = getPhase(d);
-      const sched = getDaySchedule(d, phase);
+      const sched = getSchedule(d);
       const actionable = sched.filter(b => b.cat !== "life");
       if (actionable.length === 0) continue;
       const done = actionable.filter(b => checked[`${dk}-${b.time}`]).length;
@@ -382,15 +416,14 @@ function App() {
   };
 
   const phase = getPhase(selectedDay);
-  const schedule = getDaySchedule(selectedDay, phase);
+  const schedule = getSchedule(selectedDay);
   const dk = dateKey(selectedDay);
   const actionable = schedule.filter(b => b.cat !== "life");
   const doneCount = actionable.filter(b => checked[`${dk}-${b.time}`]).length;
   const dayPct = actionable.length > 0 ? Math.round((doneCount / actionable.length) * 100) : 0;
 
   const weekStats = weekDates.map(d => {
-    const p = getPhase(d);
-    const s = getDaySchedule(d, p);
+    const s = getSchedule(d);
     const act = s.filter(b => b.cat !== "life");
     const done = act.filter(b => checked[`${dateKey(d)}-${b.time}`]).length;
     return { date: d, total: act.length, done, pct: act.length > 0 ? Math.round((done / act.length) * 100) : 0 };
