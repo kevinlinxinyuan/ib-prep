@@ -1,6 +1,6 @@
 # 射擊手遊研究筆記：CODM 與競品
 
-台灣市場的射擊手遊研究，重點是《Call of Duty: Mobile》（Garena 版）和它的競品：PUBG MOBILE、Free Fire、三角洲行動、荒野行動、暗區突圍。內容包含市場數據、評估框架、11 個商業案例的解題骨架、內購拆解與網路聲量。資料整理到 2026 年 10 月。
+台灣市場的射擊手遊研究，重點是《Call of Duty: Mobile》（Garena 版）和它的競品：PUBG MOBILE、Free Fire、三角洲行動、荒野行動、暗區突圍。內容包含市場數據、評估框架、11 個商業案例的解題骨架、內購拆解、網路聲量，以及 9 份 Sensor Tower 報告的重點數字。資料整理到 2026 年 10 月。
 
 ## 給 AI 的讀取方式
 
@@ -14,6 +14,7 @@
 | 03b_cases_7-11.md | 案例 7–11：社群營造、電競與活動、造型定價、內購系統評估、後進者搶市占；其他題型與追問 | https://raw.githubusercontent.com/kevinlinxinyuan/ib-prep/main/mobile-shooter-notes/03b_cases_7-11.md |
 | 04_monetization_competitors.md | 各射擊手遊賣什麼、四層收入模型、差異化與後進者的 7 種打法 | https://raw.githubusercontent.com/kevinlinxinyuan/ib-prep/main/mobile-shooter-notes/04_monetization_competitors.md |
 | 05_social_buzz.md | 2026/7/8–10/8 的網路聲量：巴哈姆特、Google 趨勢、YouTube、臉書、PTT | https://raw.githubusercontent.com/kevinlinxinyuan/ib-prep/main/mobile-shooter-notes/05_social_buzz.md |
+| 06_sensor_tower_notes.md | 9 份 Sensor Tower 報告的重點與數字：按題型查（市場、射擊、IP、廣告、變現、live ops、禮包、上市基準、地區）＋逐份摘要 | https://raw.githubusercontent.com/kevinlinxinyuan/ib-prep/main/mobile-shooter-notes/06_sensor_tower_notes.md |
 | _sources.md | 所有外部來源與 Sensor Tower 報告代碼對照 | https://raw.githubusercontent.com/kevinlinxinyuan/ib-prep/main/mobile-shooter-notes/_sources.md |
 
 其他檔案：
