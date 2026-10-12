@@ -1,6 +1,6 @@
 # 射擊手遊研究筆記：CODM 與競品
 
-台灣市場的射擊手遊研究，重點是《Call of Duty: Mobile》（Garena 版）和它的競品：PUBG MOBILE、Free Fire、三角洲行動、荒野行動、暗區突圍。內容包含市場數據、評估框架、11 個商業案例的解題骨架、內購拆解、網路聲量，以及 9 份 Sensor Tower 報告的重點數字。資料整理到 2026 年 10 月。
+台灣市場的射擊手遊研究，重點是《Call of Duty: Mobile》（Garena 版）和它的競品：PUBG MOBILE、Free Fire、三角洲行動、荒野行動、暗區突圍。內容包含市場數據、評估框架、11 個商業案例的解題骨架、內購拆解、網路聲量、9 份 Sensor Tower 報告的重點數字，以及近一年各家的營運日曆。資料整理到 2026 年 10 月。
 
 ## 給 AI 的讀取方式
 
@@ -15,11 +15,14 @@
 | 04_monetization_competitors.md | 各射擊手遊賣什麼、四層收入模型、差異化與後進者的 7 種打法 | https://raw.githubusercontent.com/kevinlinxinyuan/ib-prep/main/mobile-shooter-notes/04_monetization_competitors.md |
 | 05_social_buzz.md | 2026/7/8–10/8 的網路聲量：巴哈姆特、Google 趨勢、YouTube、臉書、PTT | https://raw.githubusercontent.com/kevinlinxinyuan/ib-prep/main/mobile-shooter-notes/05_social_buzz.md |
 | 06_sensor_tower_notes.md | 9 份 Sensor Tower 報告的重點與數字：按題型查（市場、射擊、IP、廣告、變現、live ops、禮包、上市基準、地區）＋逐份摘要 | https://raw.githubusercontent.com/kevinlinxinyuan/ib-prep/main/mobile-shooter-notes/06_sensor_tower_notes.md |
+| 07_liveops_calendar.md | 近一年營運日曆（2025/10–2026/10，只收官方來源）：CODM、三角洲行動、PUBG MOBILE、Free Fire、荒野行動的月曆矩陣、節奏比較、營運方向差異與對 CODM 的啟示 | https://raw.githubusercontent.com/kevinlinxinyuan/ib-prep/main/mobile-shooter-notes/07_liveops_calendar.md |
+| 07b_liveops_events.md | 07 的逐款事件明細，每筆附官方連結 | https://raw.githubusercontent.com/kevinlinxinyuan/ib-prep/main/mobile-shooter-notes/07b_liveops_events.md |
 | _sources.md | 所有外部來源與 Sensor Tower 報告代碼對照 | https://raw.githubusercontent.com/kevinlinxinyuan/ib-prep/main/mobile-shooter-notes/_sources.md |
 
 其他檔案：
 
-- `data/`：巴哈姆特看板統計、Google 趨勢、YouTube 官方頻道的原始 CSV
+- `data/`：巴哈姆特看板統計、Google 趨勢、YouTube 官方頻道的原始 CSV；`liveops_calendar_2025-10_2026-10.csv` 是營運日曆的 151 筆官方來源事件
+- `img/liveops_calendar_2025-10_2026-10.png`：營運日曆時間軸圖
 - `deck/codm_competitor_monetization.pptx`：7 頁競品變現分析簡報（PowerPoint，需下載後開啟）
 
 ## 閱讀須知
