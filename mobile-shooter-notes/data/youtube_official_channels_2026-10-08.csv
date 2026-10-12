@@ -1,0 +1,4 @@
+channel,handle,subscribers,videos_in_window_loaded,total_views_in_window,median_views_per_video,top_video_views,top_video,note
+Garena 決勝時刻 Mobile,@GarenaCODMTW,103000,31,1390517,614,460000,女神異聞錄5 轉盤宣傳,top 4 videos (P5R x3, 聖結石 MV) look ad-boosted; window = videos aged up to 3 months
+三角洲行動 Garena,@GarenaDeltaForceTW,20900,60,414694,1430,110000,鳥屎直播完整版,list capped at loaded items; counts are lower bounds
+PUBG MOBILE:絕地求生M,@PUBGMOBILEMTW,200000,90,516202,1303,34000,絕地訓練營 蜘蛛人,list capped at loaded items; counts are lower bounds
